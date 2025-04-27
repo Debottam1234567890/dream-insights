@@ -6,157 +6,170 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.ensemble import RandomForestRegressor
+import random
 
 class DreamAnalyzer:
-    def __init__(self, csv_path, target_column='Lucidity', test_size=0.2, random_state=42):
-        """
-        Initialize DreamAnalyzer with data loading, scaling, and optional TF-IDF.
-        """
+    def __init__(self, csv_path, target_columns, test_size=0.2, random_state=42):
         self.csv_path = csv_path
-        self.target_column = target_column
+        self.target_columns = target_columns
         self.test_size = test_size
         self.random_state = random_state
 
         self.scaler = None
         self.tfidf_vectorizer = None
         self.pca = PCA(n_components=2)
-        self.feature_names = []
+        self.model = None
         
-        # Load and prepare data
         self.load_and_prepare_data()
+        self.train_model()
     
     def load_and_prepare_data(self):
         df = pd.read_csv(self.csv_path)
         df.dropna(inplace=True)
 
-        if self.target_column not in df.columns:
-            raise ValueError(f"Target column '{self.target_column}' not found.")
+        if 'Dream Description' not in df.columns:
+            raise ValueError(f"'Dream Description' column not found.")
 
-        self.y = df[self.target_column]
-        if 'Dream Description' in df.columns:
-            self.has_text = True
-            self.X_numeric = df.drop(columns=[self.target_column, 'Dream Description'])
-            self.dream_texts = df['Dream Description']
-        else:
-            self.has_text = False
-            self.X_numeric = df.drop(columns=[self.target_column])
-            self.dream_texts = None
+        self.X_text = df['Dream Description']
+        self.y = df[self.target_columns]
 
-        # Scaling numeric features
-        self.scaler = StandardScaler()
-        X_scaled = self.scaler.fit_transform(self.X_numeric)
+        self.tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+        self.X_vectorized = self.tfidf_vectorizer.fit_transform(self.X_text).toarray()
 
-        # TF-IDF text features
-        if self.has_text:
-            self.tfidf_vectorizer = TfidfVectorizer(stop_words='english')
-            X_text = self.tfidf_vectorizer.fit_transform(self.dream_texts).toarray()
-            self.X_combined = np.hstack([X_scaled, X_text])
-        else:
-            self.X_combined = X_scaled
+        self.pca_data = self.pca.fit_transform(self.X_vectorized)
 
-        # PCA
-        self.pca_data = self.pca.fit_transform(self.X_combined)
-
-        # Train-test split
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X_combined, self.y, test_size=self.test_size, random_state=self.random_state
+            self.X_vectorized, self.y, test_size=self.test_size, random_state=self.random_state
         )
 
-        # Feature names
-        self.feature_names = list(self.X_numeric.columns)
-        if self.has_text:
-            self.feature_names += self.tfidf_vectorizer.get_feature_names_out().tolist()
+    def train_model(self):
+        self.model = MultiOutputRegressor(RandomForestRegressor(random_state=self.random_state))
+        self.model.fit(self.X_train, self.y_train)
 
     def plot_pca(self):
-        """
-        PCA plot of dreams.
-        """
         plt.figure(figsize=(10, 6))
-        sns.scatterplot(x=self.pca_data[:, 0], y=self.pca_data[:, 1], hue=self.y, palette='viridis', s=100, alpha=0.7)
-        plt.title('PCA Projection of Dream Data')
+        sns.scatterplot(x=self.pca_data[:, 0], y=self.pca_data[:, 1], palette='viridis', s=100, alpha=0.7)
+        plt.title('PCA Projection of Dream Descriptions')
         plt.xlabel('Principal Component 1')
         plt.ylabel('Principal Component 2')
-        plt.legend(title=self.target_column)
-        plt.grid(True)
-        plt.show()
-
-    def plot_feature_distribution(self):
-        """
-        Boxplot of numeric features.
-        """
-        plt.figure(figsize=(12, 8))
-        sns.boxplot(data=self.X_numeric, palette='coolwarm')
-        plt.title('Feature Distribution Across Dreams')
-        plt.xlabel('Features')
-        plt.ylabel('Value')
-        plt.xticks(rotation=90)
         plt.grid(True)
         plt.show()
 
     def input_new_dream(self):
-        """
-        Allow user to input a new dream and see PCA and feature plots.
-        """
         print("\n--- Input a New Dream ---")
         
-        # Get dream description
-        dream_description = ""
-        if self.has_text:
-            dream_description = input("Enter dream description (can be short): ")
+        dream_description = input("Enter dream description: ")
 
-        # Get numeric features
-        input_values = []
-        print("\nEnter values for the following numeric factors (press Enter to use 0):")
-        for feature in list(self.X_numeric.columns):
-            val = input(f"{feature}: ")
-            if val.strip() == '':
-                input_values.append(0.0)
+        dream_tfidf = self.tfidf_vectorizer.transform([dream_description]).toarray()
+
+        predicted_factors = self.model.predict(dream_tfidf)[0]
+
+        print("\nPredicted Factors:")
+        for factor, value in zip(self.target_columns, predicted_factors):
+            print(f"{factor}: {value:.2f}")
+
+        # Mental state analysis with smarter interpretations
+        print("\n--- Mental State Interpretation ---")
+        threshold = 0.5
+
+        interpretations = {
+            'Lucidity': ("High Lucidity: You may have had control and awareness inside the dream.",
+                         "Low Lucidity: The dream likely felt more automatic and uncontrolled."),
+            'Emotional Intensity': ("Strong Emotions: You experienced vivid emotions during the dream.",
+                                    "Mild Emotions: Emotional experiences were subtle or gentle."),
+            'Realism': ("High Realism: Your dream closely mirrored waking life.",
+                        "Low Realism: Your dream felt surreal or strange."),
+            'Fear Level': ("High Fear: The dream involved anxiety, threats, or fear.",
+                           "Low Fear: You likely felt calm or unafraid."),
+            'Joy Level': ("High Joy: Your dream was filled with happiness and positivity.",
+                          "Low Joy: Your dream lacked joyful emotions."),
+            'Control Over Dream': ("Strong Control: You directed the flow of the dream events.",
+                                   "Low Control: You were more of an observer in the dream."),
+            'Symbolism Strength': ("Strong Symbolism: Your dream contained rich, layered symbols.",
+                                   "Weak Symbolism: Your dream was more literal and straightforward."),
+            'Memory Recall After Waking': ("Strong Recall: You vividly remember the dream.",
+                                           "Weak Recall: Details of the dream may be fuzzy or lost."),
+            'Strangeness': ("High Strangeness: Bizarre or impossible events filled your dream.",
+                            "Low Strangeness: Your dream events made more logical sense."),
+            'Vividness': ("High Vividness: The dream imagery was sharp, colorful, and detailed.",
+                          "Low Vividness: The dream felt dull or faded.")
+        }
+
+        for factor, value in zip(self.target_columns, predicted_factors):
+            high_message, low_message = interpretations.get(factor, ("High", "Low"))
+            if value >= threshold:
+                print(f"{factor}: {high_message}")
             else:
-                try:
-                    input_values.append(float(val))
-                except ValueError:
-                    print("Invalid input. Defaulting to 0.0.")
-                    input_values.append(0.0)
-
-        # Scale numeric features
-        scaled_numeric = self.scaler.transform([input_values])
-
-        # Process dream description if available
-        if self.has_text and self.tfidf_vectorizer:
-            dream_tfidf = self.tfidf_vectorizer.transform([dream_description]).toarray()
-            final_input = np.hstack([scaled_numeric, dream_tfidf])
-        else:
-            final_input = scaled_numeric
+                print(f"{factor}: {low_message}")
 
         # PCA projection
-        projected = self.pca.transform(final_input)
+        projected = self.pca.transform(dream_tfidf)
 
-        # Plot PCA
         plt.figure(figsize=(8, 5))
-        plt.scatter(projected[:, 0], projected[:, 1], color='red', s=200, marker='*')
-        plt.title('PCA Projection of Your New Dream')
+        plt.scatter(self.pca_data[:, 0], self.pca_data[:, 1], color='blue', alpha=0.3, label='Training Dreams')
+        plt.scatter(projected[:, 0], projected[:, 1], color='red', s=200, marker='*', label='Your Dream')
+        plt.title('PCA Projection of Your Dream')
         plt.xlabel('Principal Component 1')
         plt.ylabel('Principal Component 2')
+        plt.legend()
         plt.grid(True)
         plt.show()
 
-        # Plot feature barplot
+        # Plot predicted factors
         plt.figure(figsize=(14, 6))
-        sns.barplot(x=list(self.X_numeric.columns), y=input_values, palette="mako")
-        plt.title('Entered Dream Feature Values')
+        sns.barplot(x=self.target_columns, y=predicted_factors, palette="mako")
+        plt.title('Predicted Dream Factor Values')
         plt.xticks(rotation=90)
-        plt.ylabel('Value')
+        plt.ylabel('Predicted Value')
         plt.grid(True)
         plt.show()
+
+        # --------- New Part: Real Life Prediction ----------
+        print("\n--- Real Life Prediction Based on Dream ---")
+
+        prediction = self.generate_real_life_prediction(predicted_factors)
+        print(prediction)
+
+    def generate_real_life_prediction(self, factors):
+        factor_dict = dict(zip(self.target_columns, factors))
+
+        prediction_options = []
+
+        if factor_dict.get('Joy Level', 0) > 0.7:
+            prediction_options.append("A joyful surprise awaits you soon. 🌟")
+        if factor_dict.get('Fear Level', 0) > 0.6:
+            prediction_options.append("Be cautious — you might face a small challenge. 🛡️")
+        if factor_dict.get('Lucidity', 0) > 0.7:
+            prediction_options.append("You will soon have clarity over a confusing situation. 🔍")
+        if factor_dict.get('Strangeness', 0) > 0.7:
+            prediction_options.append("Expect unexpected encounters — strange but lucky! 🍀")
+        if factor_dict.get('Symbolism Strength', 0) > 0.7:
+            prediction_options.append("Hidden opportunities will reveal themselves to you. 🔮")
+        if factor_dict.get('Control Over Dream', 0) > 0.7:
+            prediction_options.append("You are about to take control over an important aspect of life. 🚀")
+        if factor_dict.get('Memory Recall After Waking', 0) < 0.4:
+            prediction_options.append("Be careful not to overlook small details this week. 🧠")
+        if factor_dict.get('Vividness', 0) > 0.7:
+            prediction_options.append("Creativity will flow strongly soon — perfect time for projects! 🎨")
+        if not prediction_options:
+            prediction_options.append("Life may continue steadily without major changes for now. 🌱")
+
+        return random.choice(prediction_options)
+
+# Target factor columns to predict
+target_columns = [
+    'Lucidity', 'Emotional Intensity', 'Realism', 'Fear Level', 'Joy Level',
+    'Control Over Dream', 'Symbolism Strength', 'Memory Recall After Waking',
+    'Strangeness', 'Vividness'
+]
 
 # Initialize
-analyzer = DreamAnalyzer('dream_dataset.csv')
+analyzer = DreamAnalyzer('dream_dataset.csv', target_columns=target_columns)
 
 # Plot PCA of the dataset
 analyzer.plot_pca()
 
-# Plot feature distribution
-analyzer.plot_feature_distribution()
-
-# Input your new dream and see visualization
+# Input your new dream and see visualization + prediction
 analyzer.input_new_dream()
