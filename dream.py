@@ -9,6 +9,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor
 import random
+import csv
+from datetime import datetime
 
 class DreamAnalyzer:
     def __init__(self, csv_path, target_columns, test_size=0.2, random_state=42):
@@ -126,32 +128,51 @@ class DreamAnalyzer:
         plt.grid(True)
         plt.show()
 
-        # --------- New Part: Real Life Prediction ----------
+        # --------- Real Life Prediction ----------
         print("\n--- Real Life Prediction Based on Dream ---")
 
         prediction = self.generate_real_life_prediction(predicted_factors)
         print(prediction)
+
+        # --------- Append to user_dreams.csv ----------
+        try:
+            file_exists = False
+            try:
+                with open("user_dreams.csv", "r", encoding="utf-8") as f:
+                    file_exists = True
+            except FileNotFoundError:
+                pass
+
+            with open("user_dreams.csv", "a", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+
+                if not file_exists:
+                    writer.writerow(["Timestamp", "Dream Description"] + self.target_columns)
+
+                writer.writerow([datetime.now().isoformat(), dream_description] + list(predicted_factors))
+        except Exception as e:
+            print(f"⚠️ Could not save to CSV: {e}")
 
     def generate_real_life_prediction(self, factors):
         factor_dict = dict(zip(self.target_columns, factors))
 
         prediction_options = []
 
-        if factor_dict.get('Joy Level', 0) > 0.7:
+        if factor_dict.get('Joy Level', 0) > 0.5:
             prediction_options.append("A joyful surprise awaits you soon. 🌟")
-        if factor_dict.get('Fear Level', 0) > 0.6:
+        if factor_dict.get('Fear Level', 0) > 0.5:
             prediction_options.append("Be cautious — you might face a small challenge. 🛡️")
         if factor_dict.get('Lucidity', 0) > 0.7:
             prediction_options.append("You will soon have clarity over a confusing situation. 🔍")
-        if factor_dict.get('Strangeness', 0) > 0.7:
+        if factor_dict.get('Strangeness', 0) > 0.5:
             prediction_options.append("Expect unexpected encounters — strange but lucky! 🍀")
-        if factor_dict.get('Symbolism Strength', 0) > 0.7:
+        if factor_dict.get('Symbolism Strength', 0) > 0.5:
             prediction_options.append("Hidden opportunities will reveal themselves to you. 🔮")
-        if factor_dict.get('Control Over Dream', 0) > 0.7:
+        if factor_dict.get('Control Over Dream', 0) > 0.5:
             prediction_options.append("You are about to take control over an important aspect of life. 🚀")
-        if factor_dict.get('Memory Recall After Waking', 0) < 0.4:
+        if factor_dict.get('Memory Recall After Waking', 0) < 0.3:
             prediction_options.append("Be careful not to overlook small details this week. 🧠")
-        if factor_dict.get('Vividness', 0) > 0.7:
+        if factor_dict.get('Vividness', 0) > 0.5:
             prediction_options.append("Creativity will flow strongly soon — perfect time for projects! 🎨")
         if not prediction_options:
             prediction_options.append("Life may continue steadily without major changes for now. 🌱")
@@ -171,5 +192,5 @@ analyzer = DreamAnalyzer('dream_dataset.csv', target_columns=target_columns)
 # Plot PCA of the dataset
 analyzer.plot_pca()
 
-# Input your new dream and see visualization + prediction
+# Input your new dream and see visualization + prediction + CSV save
 analyzer.input_new_dream()
