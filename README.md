@@ -1,109 +1,145 @@
-# Dream Analyzer + Future Predictor
+# Dream Analyzer - AI Dream Insights
 
-Welcome to **Dream Analyzer + Future Predictor** —  
-An intelligent Python-based tool that analyzes your dreams and predicts your future moods, challenges, or opportunities based on dream psychology and AI!
+Welcome to **Dream Analyzer**, your AI-powered dream analysis system combining psychology, neuroscience, and machine learning to interpret your dreams and provide insights into your subconscious mind.
+
+**Privacy First:** No dream data is stored, neither locally nor globally. All analysis occurs only in-session.
 
 ---
 
 ## Features
 
-### Dream Analysis
-Predicts 10 key psychological factors from your dream description:
-1. **Lucidity**
-2. **Emotional Intensity**
-3. **Realism**
-4. **Fear Level**
-5. **Joy Level**
-6. **Control Over Dream**
-7. **Symbolism Strength**
-8. **Memory Recall After Waking**
-9. **Strangeness**
-10. **Vividness**
+### Comprehensive Dream Analysis
 
-### Smart Mental Interpretation
-Provides detailed, human-style explanations for each predicted factor.
+Predicts and analyzes 10 key psychological factors from your dream description:
 
-### PCA Visualization
-Projects your dream onto a 2D space alongside previous dreams, helping you see dream patterns visually.
+1. Lucidity - Awareness within the dream
+2. Emotional Intensity - Strength of feelings experienced
+3. Realism - How realistic vs. surreal the dream was
+4. Fear Level - Anxiety and threat perception
+5. Joy Level - Positive emotions experienced
+6. Control Over Dream - Degree of agency and influence
+7. Symbolism Strength - Richness of symbolic content
+8. Memory Recall After Waking - Clarity of dream memory
+9. Strangeness - Bizarreness and illogical elements
+10. Vividness - Clarity and detail of dream imagery
 
-### Dream Factor Bar Chart
-Displays a beautiful bar chart showing how strongly each factor appeared in your dream.
+### Advanced Visualizations
 
-### Real Life Prediction
-Based on your dream’s emotional profile, the analyzer predicts a possible upcoming event or advice for your waking life!
+* PCA Projection Graph for comparing dreams
+* Dream Factor Bar Charts
+* Pattern Recognition for recurring themes
+
+### Intelligent Dream Interpretation
+
+* Psychological analysis using Freudian, Jungian, cognitive, and modern neuroscience theories
+* Symbol dictionary with extensive meanings
+* Personalized, context-aware interpretations
+* Multi-level analysis: literal, personal, psychological, archetypal, and existential
+
+### Future Predictions & Guidance
+
+* Mood forecasting based on dream factors
+* Challenge warnings and potential obstacles
+* Opportunities and areas of growth
+* Practical actionable advice
+
+### Mental State Interpretation
+
+Provides explanations of:
+
+* Current psychological state
+* Unconscious processing
+* Emotional regulation patterns
+* Shadow work and personal growth
 
 ---
 
-## 🛠️ How It Works
+## How It Works
 
-### Data Preparation
-- A CSV file (`dream_dataset.csv`) containing past dream descriptions and their annotated psychological factors is used to train the model.
+### Machine Learning Pipeline
 
-### Model Training
-1. Texts are vectorized using **TF-IDF**.
-2. A **Random Forest Regressor** (wrapped in `MultiOutputRegressor`) is trained to predict the dream factors.
+1. Text vectorization (TF-IDF)
+2. Multi-output prediction (Random Forest Regressor)
+3. Pattern recognition via PCA
+4. Ensemble intelligence combining statistical and psychological models
 
-### Input Your Dream
-- When you input a new dream description, the model analyzes it and predicts the values for each psychological factor.
+### Psychological Framework
 
-### Interpretation and Visualization
-- The system explains what each factor means.
-- It projects your dream in a **PCA graph** and shows a **factor bar plot**.
+* Neuroscience: REM sleep and memory consolidation
+* Depth Psychology: Freudian and Jungian approaches
+* Cognitive Science: dream formation theories
+* Cross-Cultural: diverse interpretations
 
-### Bonus Prediction
-- The analyzer generates a random but smart "fortune" about your near future based on your dream factors!
+### Analysis Layers
+
+1. Surface analysis (literal content)
+2. Emotional profiling
+3. Symbolic interpretation
+4. Life connections
+5. Future projection
 
 ---
 
 ## Requirements
 
-- **Python 3.8+**
+**Python Version:** 3.8+
 
-### Libraries:
-- `pandas`
-- `numpy`
-- `matplotlib`
-- `seaborn`
-- `scikit-learn`
+**Libraries:**
 
-Install all dependencies via:
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn
+pip install pandas numpy matplotlib seaborn scikit-learn flask flask-cors
 ```
 
 ---
 
 ## How to Run
 
-1. Clone or download the repository.
-2. Make sure you have a `dream_dataset.csv` file with the following columns:
-   - **Dream Description**
-   - The 10 factor columns mentioned above.
-3. Run the script:
-   ```bash
-   python dream_analyzer.py
-   ```
-4. Follow the prompt to enter your dream description.
-5. Enjoy the analysis and get a glimpse into your future!
+1. Clone or download the repository `dream-insights`
+2. Ensure you have `dream_dataset.csv` with columns:
+
+   * Dream Description
+   * All 10 psychological factor columns
+3. Start the API server:
+
+```
+python3 endpoints.py
+```
+
+4. Access the service at `http://localhost:5000`
 
 ---
 
-## Example Output
+## Sample CLI Output
 
 ```
+dream-insights % python3 dream.py
+
 --- Input a New Dream ---
-Enter dream description: I was flying over a beautiful ocean under a golden sky.
+Enter dream description: I was travelling through space.
 
 Predicted Factors:
-Lucidity: 0.85
-Emotional Intensity: 0.77
-Realism: 0.30
-...
+Lucidity: 0.74
+Emotional Intensity: 0.75
+Realism: 0.27
+Fear Level: 0.38
+Joy Level: 0.24
+Control Over Dream: 0.44
+Symbolism Strength: 0.58
+Memory Recall After Waking: 0.51
+Strangeness: 0.35
+Vividness: 0.57
 
 --- Mental State Interpretation ---
-High Lucidity: You may have had control and awareness inside the dream.
-Strong Emotions: You experienced vivid emotions during the dream.
-...
+Lucidity: High Lucidity: You may have had control and awareness inside the dream.
+Emotional Intensity: Strong Emotions: You experienced vivid emotions during the dream.
+Realism: Low Realism: Your dream felt surreal or strange.
+Fear Level: Low Fear: You likely felt calm or unafraid.
+Joy Level: Low Joy: Your dream lacked joyful emotions.
+Control Over Dream: Low Control: You were more of an observer in the dream.
+Symbolism Strength: Strong Symbolism: Your dream contained rich, layered symbols.
+Memory Recall After Waking: Strong Recall: You vividly remember the dream.
+Strangeness: Low Strangeness: Your dream events made more logical sense.
+Vividness: High Vividness: The dream imagery was sharp, colorful, and detailed.
 
 --- Real Life Prediction Based on Dream ---
 Creativity will flow strongly soon — perfect time for projects!
@@ -111,36 +147,40 @@ Creativity will flow strongly soon — perfect time for projects!
 
 ---
 
-## Project Structure
+## Privacy & Ethics
 
-```
-dream_analyzer/
-├── dream_analyzer.py   # Main code
-├── dream_dataset.csv   # Your dataset
-└── README.md           # This file
-```
+* No dream data is stored locally or globally
+* All analysis happens in-session only
+* Interpretations are suggestions, not medical diagnoses
+* Users are encouraged to consult professionals for trauma or distress
 
 ---
 
-## Future Ideas
+## Scientific Foundation
 
-- Make even multi-level future predictions (short-term and long-term).
-- Add emotion classification using deep learning.
-- Build a dream diary web app with this model.
+* Peer-reviewed sleep and dream research
+* Psychological theories (Freud, Jung, cognitive, evolutionary)
+* Modern neuroscience findings
+* Evidence-based therapeutic techniques
 
 ---
 
-## Why This Matters
+## Contributing
 
-Dreams reflect your subconscious mind.  
-This project shows how **machine learning + human psychology** can combine to analyze dreams, visualize emotions, and even inspire your real-world actions!
-
-*"Dreams are not just random — they are the subconscious stories we tell ourselves."*
+* Add new dream symbols and cultural interpretations
+* Enhance ML models and visualizations
+* Multilingual support and accessibility
 
 ---
 
 ## License
 
-This project is licensed under the **MIT License**.  
-Feel free to **edit, modify, and share**!  
-See the [LICENSE](LICENSE) file for details.
+MIT License — free to use, modify, and share responsibly
+
+---
+
+## About Dream Analyzer
+
+Dream Analyzer combines AI precision with depth psychology, respecting both science and the poetic nature of dreams. Your dreams remain private, secure, and insightful.
+May your dreams illuminate your path and guide your personal growth.
+The website is available at: 
