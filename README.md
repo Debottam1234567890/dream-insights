@@ -145,6 +145,7 @@ Vividness: High Vividness: The dream imagery was sharp, colorful, and detailed.
 Creativity will flow strongly soon — perfect time for projects!
 ```
 
+Note: The actual hosted app () has to be "waken up" at times due to Render (the hosting platform) requirements, but the actual loading of the app takes minimal time.
 ---
 
 ## Privacy & Ethics
