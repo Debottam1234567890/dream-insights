@@ -1,11 +1,11 @@
-# 💤 Dream Analyzer + Future Predictor
+# Dream Analyzer + Future Predictor
 
 Welcome to **Dream Analyzer + Future Predictor** —  
 An intelligent Python-based tool that analyzes your dreams and predicts your future moods, challenges, or opportunities based on dream psychology and AI!
 
 ---
 
-## ✨ Features
+## Features
 
 ### Dream Analysis
 Predicts 10 key psychological factors from your dream description:
@@ -29,7 +29,7 @@ Projects your dream onto a 2D space alongside previous dreams, helping you see d
 ### Dream Factor Bar Chart
 Displays a beautiful bar chart showing how strongly each factor appeared in your dream.
 
-### 🔮 Real Life Prediction
+### Real Life Prediction
 Based on your dream’s emotional profile, the analyzer predicts a possible upcoming event or advice for your waking life!
 
 ---
@@ -55,7 +55,7 @@ Based on your dream’s emotional profile, the analyzer predicts a possible upco
 
 ---
 
-## 📋 Requirements
+## Requirements
 
 - **Python 3.8+**
 
@@ -73,7 +73,7 @@ pip install pandas numpy matplotlib seaborn scikit-learn
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 1. Clone or download the repository.
 2. Make sure you have a `dream_dataset.csv` file with the following columns:
@@ -88,9 +88,9 @@ pip install pandas numpy matplotlib seaborn scikit-learn
 
 ---
 
-## 📈 Example Output
+## Example Output
 
-```plaintext
+```
 --- Input a New Dream ---
 Enter dream description: I was flying over a beautiful ocean under a golden sky.
 
@@ -106,12 +106,12 @@ Strong Emotions: You experienced vivid emotions during the dream.
 ...
 
 --- Real Life Prediction Based on Dream ---
-Creativity will flow strongly soon — perfect time for projects! 🎨
+Creativity will flow strongly soon — perfect time for projects!
 ```
 
 ---
 
-## 📚 Project Structure
+## Project Structure
 
 ```
 dream_analyzer/
@@ -122,7 +122,7 @@ dream_analyzer/
 
 ---
 
-## 🎨 Future Ideas
+## Future Ideas
 
 - Make even multi-level future predictions (short-term and long-term).
 - Add emotion classification using deep learning.
@@ -130,16 +130,16 @@ dream_analyzer/
 
 ---
 
-## 🧠 Why This Matters
+## Why This Matters
 
 Dreams reflect your subconscious mind.  
 This project shows how **machine learning + human psychology** can combine to analyze dreams, visualize emotions, and even inspire your real-world actions!
 
-*"Dreams are not just random — they are the subconscious stories we tell ourselves."* 🌙
+*"Dreams are not just random — they are the subconscious stories we tell ourselves."*
 
 ---
 
-## 📝 License
+## License
 
 This project is licensed under the **MIT License**.  
 Feel free to **edit, modify, and share**!  
