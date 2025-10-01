@@ -179,8 +179,12 @@ MIT License — free to use, modify, and share responsibly
 
 ---
 
-## About Dream Analyzer
+## About Dream Analyzer and Dream Bird
 
 Dream Analyzer combines AI precision with depth psychology, respecting both science and the poetic nature of dreams. Your dreams remain private, secure, and insightful.
+
+Dream Bird is the AI assistant behind Dream Analyzer. It is designed to help users explore their dreams, understand psychological patterns, and receive actionable insights. Dream Bird uses a comprehensive knowledge base of dream psychology, neuroscience, and cultural symbolism to provide nuanced interpretations and guidance.
+
 May your dreams illuminate your path and guide your personal growth.
-The website is available at: 
+
+The website is available at:
