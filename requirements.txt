@@ -5,3 +5,8 @@ numpy
 scikit-learn
 nltk
 wordcloud
+io
+base64
+flask
+flask-cors
+gunicorn
