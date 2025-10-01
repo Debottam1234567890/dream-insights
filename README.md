@@ -145,7 +145,7 @@ Vividness: High Vividness: The dream imagery was sharp, colorful, and detailed.
 Creativity will flow strongly soon — perfect time for projects!
 ```
 
-Note: The actual hosted app () has to be "waken up" at times due to Render (the hosting platform) requirements, but the actual loading of the app takes minimal time.
+Note: The actual hosted app (https://dream-insights.onrender.com) has to be "waken up" at times due to Render (the hosting platform) requirements, but the actual loading of the app takes minimal time.
 ---
 
 ## Privacy & Ethics
@@ -188,4 +188,4 @@ Dream Bird is the AI assistant behind Dream Analyzer. It is designed to help use
 
 May your dreams illuminate your path and guide your personal growth.
 
-The website is available at:
+The website is available at: https://dream-insights.onrender.com
